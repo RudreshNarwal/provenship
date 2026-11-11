@@ -32,6 +32,32 @@ Don't redo phases whose output already exists. Artifacts in repo conventions (e.
 | Implementation plan | Phase 3 |
 | Finished code needing checks | Phase 4 |
 
+## Scope gate (after Phase 0, before Phase 1)
+
+Brainstorm and `/autoplan` are the two most expensive steps (`/autoplan` alone loads ~200KB of review
+skills). Spend them only where a wrong plan is costly. Classify the work **Small** or **Big**, state it
+with a one-line reason, and log it in the finalize report. Interactive: the user may overrule.
+Autonomous: decide, don't ask.
+
+**Big** if ANY of these holds:
+- a new user-facing feature, a new subsystem, or the phase-level plan of a multi-epic phase;
+- it touches approvals, permissions, confidentiality, money that moves, state-changing email links,
+  public API/webhooks, writes to external systems, or legal/tax;
+- it spans more than one layer (UI + API + schema) or will touch more than ~5 files;
+- the requirement is still ambiguous after one careful read.
+
+**Otherwise Small**: a bugfix with a known cause, a tweak, a single-layer change, an epic inside an
+already-planned phase.
+
+| | Small | Big |
+|---|---|---|
+| 1 Brainstorm | **skip** — write the goal + assumptions in three lines | `provenship:brainstorming` |
+| 2 Plan | short plan (task = file, change, test) + one self-review pass | `provenship:writing-plans` + `/autoplan` once |
+| 3–6 | same for both | same for both |
+
+An epic inside a planned phase never re-brainstorms; it gets `/autoplan` only if the risk list above
+applies to it. A skipped phase gets no stage marker. Never skip the order, only the content.
+
 ## Phase 0 — Preflight (run once, before anything)
 
 Provenship bundles its superpowers, karpathy, and frontend-design sub-skills (vendored under
@@ -39,13 +65,18 @@ Provenship bundles its superpowers, karpathy, and frontend-design sub-skills (ve
 cannot be bundled. Before starting, verify the external dependency:
 
 - **gstack** — required for Phases 5–6 (`/qa`, `/qa-only`, `/browse`, `/design-review`, `/autoplan`,
-  `/ship`, `/setup-browser-cookies`; optional-use: `/office-hours` in Phase 1). A SessionStart hook (`hooks/hooks.json` →
+  `/ship`, `/setup-browser-cookies`). A SessionStart hook (`hooks/hooks.json` →
   `scripts/preflight-gstack.sh`) already auto-detects it at session start and, when missing, prints the
   install command (or background-installs it if `PROVENSHIP_AUTO_INSTALL_GSTACK=1`). Re-check here
   (e.g. `~/.claude/skills/gstack/` exists, or `/qa` resolves); still missing → tell the user to run
   `scripts/install-gstack.sh` (it bootstraps Bun + gstack + Playwright) and STOP until it's installed.
 - **frontend-design** — required only for `web/` / UI work, and it's now **bundled** (vendored under
   `provenship:frontend-design`), so there is nothing to install for UI work.
+- **hallmark**, **dashboard-design** — *optional*, for **new** UI (both MIT; not bundled — large and
+  fast-moving). Detect `~/.claude/skills/hallmark` / `.agents/skills/hallmark` and an installed
+  `dashboard-design`. Missing → fall back to `provenship:frontend-design` silently. Install:
+  `npx skills add nutlope/hallmark`; `/plugin marketplace add abdiraimov-otabek/dashboard-design-skill`
+  then `/plugin install dashboard-design@dashboard-design-skill`.
 
 If the dependency is genuinely unavailable and cannot be installed (e.g. no network in a sandbox),
 say so plainly and stop — do not silently skip QA or ship.
@@ -66,9 +97,9 @@ rules are in context — the summary below is a reminder, not a substitute.
 - **Bugs get root-caused.** Any test failure or bug you can't explain at a glance (in Build or QA) →
   `provenship:systematic-debugging`. No guess-fixes.
 
-## Autonomy gate (asked once, right after Phase 1)
+## Autonomy gate (asked once, right after Phase 1 — or right after the Scope gate when Small skips it)
 
-When the spec is approved, ask one batched question with two parts:
+When the spec is approved (or the Small goal is stated), ask one batched question with two parts:
 
 1. **"Run the rest autonomously?"**
 2. **"QA login credentials?"** — three ways to authenticate the app under test, if QA will hit
@@ -85,12 +116,13 @@ When the spec is approved, ask one batched question with two parts:
 
 | Decision point | Autonomous default |
 |---|---|
-| Plan review (P2) | `/autoplan`; accept its recommended options at its final gate |
+| Scope gate | decide Small/Big from the rules above; log the reason |
+| Plan review (P2) | Small: self-review only. Big: `/autoplan` once; accept its recommended options at its final gate |
 | Build mode (P3) | subagent-driven; `executing-plans` if ≤3 sequential tasks |
 | Mid-run ambiguity | safer interpretation, logged in the finalize report |
 | Second opinions (P4) | skip `/codex`; `requesting-code-review` stays mandatory |
 | QA local bug (P5) | fix all in place; defer only with a logged reason |
-| QA architecture/design re-plan (P5, same scope) | auto loop-back via `/autoplan`, re-build the affected slice, re-QA; logged in the report |
+| QA architecture/design re-plan (P5, same scope) | auto loop-back via a single lens (`/plan-eng-review` or `/plan-design-review`, never `/autoplan`), re-build the affected slice, re-QA; logged in the report |
 | QA product/scope flaw (P5) | **STOP and surface** — never silently re-scope (see Phase 5 triage) |
 | Missing QA credentials | env / creds file / gate answer; else self-register a test account (non-prod only); signup impossible → STOP and report |
 | Soft gate fails (P6) | STOP and report — never ship failures autonomously |
@@ -103,28 +135,46 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
 
 **Before each phase's work, record a stage marker** (see Cost tracking).
 
-1. **Brainstorm** — requirement is a raw, unvalidated product idea (not yet a defined feature) and
-   gstack is installed → run gstack `/office-hours` first (startup or builder mode) to pressure-test
-   what's worth building; skip it when the requirement is already defined. Then invoke
-   `provenship:brainstorming`. Ask everything needed up-front, in one
-   batch. *Verify:* spec written at `docs/superpowers/specs/YYYY-MM-DD-<topic>.md` (or the repo's
-   convention) and approved. If the approved spec still feels under-refined — open design decisions,
-   fuzzy edges — don't carry it forward raw: flag it so Phase 2 runs `/autoplan` to harden the plan
-   (interactive mode included). Then ask the **Autonomy gate** question (below).
-2. **Plan** — invoke `provenship:writing-plans` to produce the plan file, then review the plan:
-   autonomous mode → gstack `/autoplan` (runs the CEO/design/eng/DX review lenses over the plan
-   with auto-decisions and hardens it; accept its recommendations at its final gate); interactive
-   mode → the user reviews, invoking `/autoplan` or individual `/plan-*-review` skills on request —
-   but when the plan needs hardening (thin, many open decisions, or flagged shaky from Phase 1),
-   offer `/autoplan` in one line and run it. *Verify:* plan file exists with independently
-   executable tasks.
+1. **Brainstorm** — **Big only** (Small: skip; state the goal and assumptions in three lines and go on).
+   Invoke `provenship:brainstorming`. Ask everything needed up-front, in one batch. *Verify:* spec
+   written at `docs/superpowers/specs/YYYY-MM-DD-<topic>.md` (or the repo's convention) and approved.
+   If the approved spec still feels under-refined — open design decisions, fuzzy edges — flag it so
+   Phase 2 hardens it. `/office-hours` is **not** part of this pipeline; run it only when the user
+   names it. Then ask the **Autonomy gate** question (above).
+2. **Plan** — **Small:** write a short plan inline (each task = file, change, test), then one
+   self-review pass: every task traces to the goal, no placeholders, nothing speculative. No
+   `/autoplan`. **Big:** invoke `provenship:writing-plans`, then run gstack `/autoplan` **once** on the
+   plan (CEO/design/eng/DX lenses, auto-decisions; accept its recommendations at its final gate).
+   Pass it the Phase 1 spec path as the design doc and tell it to skip its `/office-hours`
+   prerequisite offer — autoplan only looks for gstack's own design-doc path, so it would otherwise
+   offer `/office-hours` even though a spec exists. Interactive: run it unless the user declines.
+   *Verify:* plan file exists with independently executable tasks.
 3. **Build** — invoke `provenship:subagent-driven-development` for ALL implementation (tiny plan of
    2–3 sequential tasks → `provenship:executing-plans` in-session instead). Within it:
    - Every task follows `provenship:test-driven-development`. Repo has no test runner → bootstrap a
      minimal one for the new code (e.g. pytest for Django, vitest for Vue; smoke-level is enough).
      Only if setup would dwarf the feature itself, record an explicit no-harness exception that
      Finalize must surface.
-   - Frontend tasks (components, pages, styling, `web/`) also invoke `provenship:frontend-design`.
+   - Frontend tasks (components, pages, styling, `web/`) — **route by what is being built**, and
+     **name the skill in the implementer prompt** (subagents don't inherit it). First match wins:
+
+     | Building | Use (if installed) |
+     |---|---|
+     | Change to an **existing** UI | the app's own design system / project frontend skill. No new aesthetic; Hallmark only if the user names it |
+     | **New** landing / marketing / brand page or site | `hallmark` (build mode; run `scripts/sloplint.mjs --render` before handing back) |
+     | **New** data dashboard (KPIs, charts, filters) | `dashboard-design` (it ends with a screenshot QA pass) |
+     | **New** other app screen (admin CRUD, tables, forms, settings) | `hallmark` with `--scope app` |
+     | Chart only, no screen | `dataviz` |
+     | Nothing above installed, or no design system | `provenship:frontend-design` (bold aesthetic — fine for new pages, avoid for dense tools) |
+
+     One skill per task; never stack two visual-direction skills on the same screen.
+
+     **Dashboard reference — BoardUI** (boardui.com; React + Tailwind v4 + React Aria, tokens designed in
+     Figma). On a **non-React** stack (Vue/Nuxt/Svelte/plain) it is a *visual reference only*: borrow the
+     stat-card / data-grid / chart-card patterns, semantic color tokens, density and loading/empty/error
+     states — do not install it. On React + Tailwind v4 it may be installed (`npx boardui@latest init`,
+     `npx boardui@latest skill`). Free tier is MIT; its charts and dashboard templates are paid Pro — take
+     the pattern, never copy Pro source.
    - **Every subagent prompt MUST embed the karpathy discipline** — fresh subagents don't inherit
      this context. Tell each implementer: state your assumptions in your report; if the task is
      ambiguous, return the question instead of guessing; minimum code; touch only what the task
@@ -160,7 +210,7 @@ Triage **every** QA finding into one class and take its route:
 | Class | Route |
 |---|---|
 | **Local bug (FE or BE)** — fixable within the current plan/scope | Fix in place via `/qa` loop. Cosmetic visual → `/design-review` in-place fix. (Current behavior.) |
-| **Architecture / eng flaw** — fixing it means changing the plan, not just the code | **Loop back to Phase 2** for the affected slice: `provenship:writing-plans` + `/plan-eng-review` (or `/autoplan`), then re-Build (3) → re-Review (4) → re-QA (5) **that slice only**. |
+| **Architecture / eng flaw** — fixing it means changing the plan, not just the code | **Loop back to Phase 2** for the affected slice: `provenship:writing-plans` + `/plan-eng-review`, then re-Build (3) → re-Review (4) → re-QA (5) **that slice only**. |
 | **Design / UX flaw beyond cosmetic** — the interaction model or layout is fundamentally off | **Loop back to Phase 2** via `/plan-design-review`, then re-Build the affected UI. (Distinct from the in-place `/design-review`.) |
 | **Product / scope flaw** — QA shows we built the wrong thing, or the spec itself is wrong | **Loop back to Phase 1** to re-scope via `/plan-ceo-review`. This is a scope change. |
 
@@ -170,7 +220,7 @@ Triage **every** QA finding into one class and take its route:
   or looping back.** Present the finding, the evidence (the `browse network` / `console --errors`
   capture), and the recommended route. Let them choose: fix-and-loop-back / defer / abandon.
 - **Autonomous mode:** automatic — architecture and design re-plans (same scope) loop back through
-  `/autoplan` and re-build the affected slice with zero questions. The **one** exception: a genuine
+  a single review lens (`/plan-eng-review` / `/plan-design-review`) and re-build the affected slice with zero questions. The **one** exception: a genuine
   **product / scope redefinition STOPs and surfaces** to the user (you cannot silently change what the
   product *is* — same spirit as the Phase 6 soft gate and the "don't assume" rule).
 
@@ -189,7 +239,8 @@ Triage **every** QA finding into one class and take its route:
 `provenship:verification-before-completion`, `provenship:finishing-a-development-branch`,
 `provenship:karpathy-guidelines`, `provenship:frontend-design`, and gstack `/qa`, `/qa-only`,
 `/browse`, `/design-review`, `/autoplan`, `/ship`, `/land-and-deploy`, `/setup-browser-cookies`
-(optional: `/office-hours`).
+(optional: `hallmark`, `dashboard-design`, `dataviz` for UI; `/office-hours` only on request). `brainstorming` and
+`/autoplan` are Big-only (see Scope gate).
 
 ## Phase 6 — Enhanced Finalize
 

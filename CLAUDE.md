@@ -128,8 +128,10 @@ installed via `scripts/install-gstack.sh`. Used in Phases 5–6 (`/qa`, `/qa-onl
 
 `skills/provenship/SKILL.md` defines:
 - **Entry map** — start at the right phase if a spec/plan/code already exists (don't redo finished work).
+- **Scope gate** — Small vs Big before Phase 1. Brainstorm + `/autoplan` are Big-only; Small gets a short
+  plan + self-review. `/office-hours` is not in the default flow.
 - **Phase 0 — Preflight** — verify gstack installed (superpowers/karpathy/frontend-design are bundled);
-  stop with install instructions if gstack is missing.
+  stop with install instructions if gstack is missing. `hallmark` is an optional, un-vendored UI dep.
 - **Discipline** — invoke `provenship:karpathy-guidelines` at start; rules apply to every phase.
 - **Autonomy gate** (asked once, after Phase 1) — "run autonomously?" + QA credentials. Yes → zero
   further questions, recommended defaults table, safer-interpretation-logged on ambiguity.

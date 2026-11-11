@@ -40,12 +40,14 @@ Provenship doesn't just write code — it runs a strict engineering lifecycle, e
 
 - **`0` 🔍 Preflight** — verifies dependencies before doing anything (gstack must be installed;
   superpowers, karpathy, and frontend-design are bundled).
-- **`1` 🧠 Brainstorm** — deconstructs the requirement, maps edge cases, and agrees on an approach
-  → an **approved spec**.
-- **`2` 📋 Plan** — generates a detailed, step-by-step implementation plan *before* touching files
-  (auto-reviewed via `/autoplan` when running autonomously).
+- **`1` 🧠 Brainstorm** — *big work only* (a **scope gate** sorts Small from Big): deconstructs the
+  requirement, maps edge cases, and agrees on an approach → an **approved spec**.
+- **`2` 📋 Plan** — a step-by-step implementation plan *before* touching files. Small work gets a short
+  plan + one self-review; Big work gets `writing-plans` + a single `/autoplan` pass.
 - **`3` 🧪 Build (TDD)** — writes failing tests *first*, then the minimal clean code to pass them,
-  with Karpathy discipline injected into every subagent prompt and `frontend-design` for UI work.
+  with Karpathy discipline injected into every subagent prompt; UI work uses `frontend-design`
+  (optionally [Hallmark](https://github.com/Nutlope/hallmark) for new landing pages and app screens, and
+  [dashboard-design](https://github.com/abdiraimov-otabek/dashboard-design-skill) for new data dashboards).
 - **`4` 🔍 Review** — self-reviews the diff for correctness, security, and style (+ `/review`,
   `/codex` for an adversarial second opinion).
 - **`5` 🌐 Browser + API QA** — drives a headless browser to verify the UI *and* asserts the real
@@ -67,10 +69,10 @@ requirement
 [0] Preflight ──── verify gstack is installed (superpowers + karpathy + frontend-design are bundled)
     │
     ▼
-[1] Brainstorm ─── provenship:brainstorming → approved spec          ◀─┐
+[1] Brainstorm ─── (Big only) provenship:brainstorming → approved spec ◀─┐
     │              └─▶ Autonomy gate: "run autonomously?" + QA creds   │
     ▼                                                                  │ re-scope
-[2] Plan ───────── provenship:writing-plans (+ /autoplan when auto)  ◀─┤
+[2] Plan ───────── Small: short plan · Big: writing-plans + /autoplan ◀─┤
     │                                                                  │ re-plan / re-design
     ▼                                                                  │
 [3] Build ──────── provenship:subagent-driven-development · TDD · provenship:frontend-design for UI

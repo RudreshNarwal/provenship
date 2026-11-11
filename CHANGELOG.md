@@ -6,12 +6,26 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+- **Scope gate: brainstorm and `/autoplan` are Big-only.** Work is classified Small/Big before Phase 1
+  (Big = new feature/subsystem, risk-list area, multi-layer or >~5 files, or ambiguous). Small skips
+  brainstorm and gets a short plan + one self-review; Big runs brainstorm and `/autoplan` once. QA
+  loop-backs use a single review lens instead of `/autoplan`.
+- **`/office-hours` removed from the default flow.** `/autoplan`'s design-doc check only sees gstack's
+  own path, so it offered `/office-hours` on every run; Phase 2 now hands it the spec path and skips
+  that offer. Run `/office-hours` only on request.
+- **Frontend routing by category (optional skills).** Phase 3 picks one UI skill per task: existing UI →
+  the app's own design system; new landing page → `hallmark`; new data dashboard → `dashboard-design`;
+  other new app screen → `hallmark --scope app`; chart only → `dataviz`; fallback → bundled
+  `frontend-design`. Hallmark and dashboard-design are optional, un-vendored (MIT). BoardUI is named as
+  the dashboard visual reference (reference-only on non-React stacks).
+
 ### Added
 - **`/autoplan` refinement triggers in Phases 1–2.** A spec that's still under-refined after
   brainstorming is flagged so Plan hardens it via gstack `/autoplan`, and interactive mode now
   proactively offers `/autoplan` (one line) when the plan is thin or carries open decisions — no
   longer only on request. The autonomous path is unchanged (it already auto-runs it).
-- **Optional `/office-hours` hook in Phase 1.** When the input is a raw, unvalidated product idea
+- **Optional `/office-hours` hook in Phase 1 (superseded — see Changed).** When the input is a raw, unvalidated product idea
   (not a defined feature) and gstack is installed, Provenship pressure-tests what's worth building
   via gstack `/office-hours` before brainstorming how. One conditional line, not a new phase —
   Phases 1–4 stay gstack-free on Codex/OpenCode.
