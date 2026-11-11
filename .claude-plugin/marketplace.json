@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Provenship — drive a requirement end-to-end to a reviewed, QA'd, shipped PR.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "provenship",
       "source": "./",
       "description": "End-to-end development pipeline with evidence-rich finalize and ship.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Rudresh Narwal"
       },
