@@ -6,6 +6,8 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-11
+
 ### Changed
 - **Scope gate: brainstorm and `/autoplan` are Big-only.** Work is classified Small/Big before Phase 1
   (Big = new feature/subsystem, risk-list area, multi-layer or >~5 files, or ambiguous). Small skips
@@ -92,5 +94,6 @@ All notable changes to Provenship are documented here. The format is based on
 - gstack declared as a runtime dependency with `scripts/install-gstack.sh`.
 - `cost-table.py` per-stage token/cost attribution, vendoring sync + lint scripts, CI, and docs.
 
-[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/RudreshNarwal/provenship/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/RudreshNarwal/provenship/releases/tag/v0.1.0
