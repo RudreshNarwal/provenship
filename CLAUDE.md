@@ -131,7 +131,9 @@ installed via `scripts/install-gstack.sh`. Used in Phases 5–6 (`/qa`, `/qa-onl
 - **Scope gate** — Small vs Big before Phase 1. Brainstorm + `/autoplan` are Big-only; Small gets a short
   plan + self-review. `/office-hours` is not in the default flow.
 - **Phase 0 — Preflight** — verify gstack installed (superpowers/karpathy/frontend-design are bundled);
-  stop with install instructions if gstack is missing. `hallmark` is an optional, un-vendored UI dep.
+  stop with install instructions if gstack is missing. `landing-page-design`, `hallmark`, and
+  `dashboard-design` are optional, un-vendored UI deps. New landing / marketing / brand pages prefer
+  `landing-page-design`, then `hallmark`, then bundled `frontend-design`.
 - **Discipline** — invoke `provenship:karpathy-guidelines` at start; rules apply to every phase.
 - **Autonomy gate** (asked once, after Phase 1) — "run autonomously?" + QA credentials. Yes → zero
   further questions, recommended defaults table, safer-interpretation-logged on ambiguity.

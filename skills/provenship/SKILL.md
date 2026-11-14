@@ -72,9 +72,14 @@ cannot be bundled. Before starting, verify the external dependency:
   `scripts/install-gstack.sh` (it bootstraps Bun + gstack + Playwright) and STOP until it's installed.
 - **frontend-design** — required only for `web/` / UI work, and it's now **bundled** (vendored under
   `provenship:frontend-design`), so there is nothing to install for UI work.
-- **hallmark**, **dashboard-design** — *optional*, for **new** UI (both MIT; not bundled — large and
-  fast-moving). Detect `~/.claude/skills/hallmark` / `.agents/skills/hallmark` and an installed
-  `dashboard-design`. Missing → fall back to `provenship:frontend-design` silently. Install:
+- **landing-page-design** — *optional*, preferred for **new landing / marketing / brand pages**.
+  Detect an installed skill (including `~/.claude/skills/landing-page-design`,
+  `~/.agents/skills/landing-page-design`, or project-local equivalents). Install:
+  `npx skills add elayadesign/ai-design-skills --skill landing-page-design`.
+  Missing → try `hallmark`, then bundled `provenship:frontend-design`, silently.
+- **hallmark**, **dashboard-design** — *optional*, for **new** UI (not bundled). Detect an installed
+  skill in the agent's user or project skill directories. Missing → fall back to
+  `provenship:frontend-design` silently. Install:
   `npx skills add nutlope/hallmark`; `/plugin marketplace add abdiraimov-otabek/dashboard-design-skill`
   then `/plugin install dashboard-design@dashboard-design-skill`.
 
@@ -161,7 +166,7 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      | Building | Use (if installed) |
      |---|---|
      | Change to an **existing** UI | the app's own design system / project frontend skill. No new aesthetic; Hallmark only if the user names it |
-     | **New** landing / marketing / brand page or site | `hallmark` (build mode; run `scripts/sloplint.mjs --render` before handing back) |
+     | **New** landing / marketing / brand page or site | `landing-page-design`; if missing, `hallmark` (build mode; run `scripts/sloplint.mjs --render` before handing back), then bundled `provenship:frontend-design` |
      | **New** data dashboard (KPIs, charts, filters) | `dashboard-design` (it ends with a screenshot QA pass) |
      | **New** other app screen (admin CRUD, tables, forms, settings) | `hallmark` with `--scope app` |
      | Chart only, no screen | `dataviz` |
@@ -239,7 +244,8 @@ Triage **every** QA finding into one class and take its route:
 `provenship:verification-before-completion`, `provenship:finishing-a-development-branch`,
 `provenship:karpathy-guidelines`, `provenship:frontend-design`, and gstack `/qa`, `/qa-only`,
 `/browse`, `/design-review`, `/autoplan`, `/ship`, `/land-and-deploy`, `/setup-browser-cookies`
-(optional: `hallmark`, `dashboard-design`, `dataviz` for UI; `/office-hours` only on request). `brainstorming` and
+(optional: `landing-page-design`, `hallmark`, `dashboard-design`, `dataviz` for UI;
+`/office-hours` only on request). `brainstorming` and
 `/autoplan` are Big-only (see Scope gate).
 
 ## Phase 6 — Enhanced Finalize

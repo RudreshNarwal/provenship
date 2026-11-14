@@ -6,6 +6,14 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-14
+
+### Added
+- **Optional landing-page-design skill.** New landing, marketing, and brand pages prefer
+  `landing-page-design` from `elayadesign/ai-design-skills`, with its install command documented in
+  preflight and the README. Missing installs fall back to Hallmark, then bundled `frontend-design`.
+  Existing UI continues to use the project's design system, and each task uses one design skill.
+
 ## [0.2.0] - 2026-11-11
 
 ### Changed
@@ -94,6 +102,7 @@ All notable changes to Provenship are documented here. The format is based on
 - gstack declared as a runtime dependency with `scripts/install-gstack.sh`.
 - `cost-table.py` per-stage token/cost attribution, vendoring sync + lint scripts, CI, and docs.
 
-[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/RudreshNarwal/provenship/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RudreshNarwal/provenship/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/RudreshNarwal/provenship/releases/tag/v0.1.0

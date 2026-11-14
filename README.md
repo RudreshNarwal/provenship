@@ -8,7 +8,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-22C55E.svg"></a>
   <a href="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml"><img alt="CI" src="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml/badge.svg"></a>
-  <img alt="Version 0.1.0" src="https://img.shields.io/badge/version-0.1.0-0EA5A0.svg">
+  <img alt="Version 0.2.1" src="https://img.shields.io/badge/version-0.2.1-0EA5A0.svg">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-0F172A.svg">
 </p>
 
@@ -46,7 +46,8 @@ Provenship doesn't just write code — it runs a strict engineering lifecycle, e
   plan + one self-review; Big work gets `writing-plans` + a single `/autoplan` pass.
 - **`3` 🧪 Build (TDD)** — writes failing tests *first*, then the minimal clean code to pass them,
   with Karpathy discipline injected into every subagent prompt; UI work uses `frontend-design`
-  (optionally [Hallmark](https://github.com/Nutlope/hallmark) for new landing pages and app screens, and
+  (optionally [landing-page-design](https://github.com/elayadesign/ai-design-skills) for new landing pages,
+  [Hallmark](https://github.com/Nutlope/hallmark) for new app screens, and
   [dashboard-design](https://github.com/abdiraimov-otabek/dashboard-design-skill) for new data dashboards).
 - **`4` 🔍 Review** — self-reviews the diff for correctness, security, and style (+ `/review`,
   `/codex` for an adversarial second opinion).
@@ -252,6 +253,19 @@ Provenship vendors a pinned, permissively-licensed snapshot of the skills it orc
 plus one Apache-2.0 skill — `frontend-design`), so it installs as one self-contained plugin. gstack is
 the exception — it's a separate product you install once. Full provenance and versions are in
 [`VENDORED.md`](./VENDORED.md).
+
+### Optional frontend skills
+
+For new landing, marketing, and brand pages, Provenship prefers
+[`landing-page-design`](https://github.com/elayadesign/ai-design-skills). Install it separately:
+
+```bash
+npx skills add elayadesign/ai-design-skills --skill landing-page-design
+```
+
+Add `-g` for a user-level install across projects. If the skill is unavailable, Provenship uses
+Hallmark when installed, then bundled `frontend-design`. Each task uses one design skill;
+changes to existing UI continue to use the project's design system.
 
 ## ❓ FAQ
 
