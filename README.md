@@ -8,7 +8,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-22C55E.svg"></a>
   <a href="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml"><img alt="CI" src="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml/badge.svg"></a>
-  <img alt="Version 0.2.1" src="https://img.shields.io/badge/version-0.2.1-0EA5A0.svg">
+  <img alt="Version 0.2.2" src="https://img.shields.io/badge/version-0.2.2-0EA5A0.svg">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-0F172A.svg">
 </p>
 
@@ -264,8 +264,11 @@ npx skills add elayadesign/ai-design-skills --skill landing-page-design
 ```
 
 Add `-g` for a user-level install across projects. If the skill is unavailable, Provenship uses
-Hallmark when installed, then bundled `frontend-design`. Each task uses one design skill;
-changes to existing UI continue to use the project's design system.
+Hallmark when installed, then bundled `frontend-design`. Tasks that need visual design load at most
+one design skill; backend, tooling, copy-only, and frontend logic-only changes skip design skills.
+Changes to existing UI continue to use the project's design system. Skills load when their phase
+or task needs them, without preloading alternatives, and loaded instructions are reused within the
+current context.
 
 ## ❓ FAQ
 

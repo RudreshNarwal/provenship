@@ -14,6 +14,12 @@ an evidence-rich Finalize (report + screenshots + per-stage cost table + credent
 finish, then move on. Do not paraphrase a phase instead of invoking its skill. Skip a phase's
 *content* only when it genuinely doesn't apply, never the order.
 
+**Load skills on demand.** Select by task, phase, and skill metadata before reading a skill body.
+Invoke each applicable skill when its work starts; do not preload skills for later phases or read
+alternative skills just to choose between them. Reuse instructions already present in the current
+context; read supporting references only when needed. Re-read if those instructions are no longer
+available after compaction or in a fresh agent. This changes loading, not required phase checks.
+
 ## When to use
 
 - `/provenship`, "run provenship", "ship this end-to-end", "run my pipeline".
@@ -64,14 +70,18 @@ Provenship bundles its superpowers, karpathy, and frontend-design sub-skills (ve
 `provenship:`), but the browser-QA and ship phases call **gstack**, which is a separate product and
 cannot be bundled. Before starting, verify the external dependency:
 
+Preflight checks availability through registered skill names or file existence, without reading
+skill bodies. Check optional design skills only when a task needs visual design, using the Phase 3
+router; stop checking alternatives once a matching installed skill is found.
+
 - **gstack** — required for Phases 5–6 (`/qa`, `/qa-only`, `/browse`, `/design-review`, `/autoplan`,
   `/ship`, `/setup-browser-cookies`). A SessionStart hook (`hooks/hooks.json` →
   `scripts/preflight-gstack.sh`) already auto-detects it at session start and, when missing, prints the
   install command (or background-installs it if `PROVENSHIP_AUTO_INSTALL_GSTACK=1`). Re-check here
   (e.g. `~/.claude/skills/gstack/` exists, or `/qa` resolves); still missing → tell the user to run
   `scripts/install-gstack.sh` (it bootstraps Bun + gstack + Playwright) and STOP until it's installed.
-- **frontend-design** — required only for `web/` / UI work, and it's now **bundled** (vendored under
-  `provenship:frontend-design`), so there is nothing to install for UI work.
+- **frontend-design** — **bundled** fallback for visual design work (vendored under
+  `provenship:frontend-design`); load only when selected by the Phase 3 router.
 - **landing-page-design** — *optional*, preferred for **new landing / marketing / brand pages**.
   Detect an installed skill (including `~/.claude/skills/landing-page-design`,
   `~/.agents/skills/landing-page-design`, or project-local equivalents). Install:
@@ -160,8 +170,11 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      minimal one for the new code (e.g. pytest for Django, vitest for Vue; smoke-level is enough).
      Only if setup would dwarf the feature itself, record an explicit no-harness exception that
      Finalize must surface.
-   - Frontend tasks (components, pages, styling, `web/`) — **route by what is being built**, and
-     **name the skill in the implementer prompt** (subagents don't inherit it). First match wins:
+   - Tasks that create or change **visual design** — **route by what is being built**, and
+     **name the selected skill in the implementer prompt** (subagents don't inherit it). Backend,
+     tooling, copy-only, and frontend logic-only changes do not need a visual-direction skill.
+     Select from metadata and availability; the implementer loads the chosen skill when starting
+     that task. The orchestrator need not read it just to dispatch. First match wins:
 
      | Building | Use (if installed) |
      |---|---|
@@ -172,7 +185,8 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      | Chart only, no screen | `dataviz` |
      | Nothing above installed, or no design system | `provenship:frontend-design` (bold aesthetic — fine for new pages, avoid for dense tools) |
 
-     One skill per task; never stack two visual-direction skills on the same screen.
+     At most one visual-direction skill per task; never stack two on the same screen. A fallback is
+     used only if the preferred skill is unavailable, not as an additional design pass.
 
      **Dashboard reference — BoardUI** (boardui.com; React + Tailwind v4 + React Aria, tokens designed in
      Figma). On a **non-React** stack (Vue/Nuxt/Svelte/plain) it is a *visual reference only*: borrow the
@@ -200,7 +214,7 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      submit, save, load, delete), run `browse network` — confirm the expected XHR/fetch calls fired
      and returned 2xx. A clean-looking UI with missing or failing calls is a bug.
    - `browse console --errors` after every interaction.
-   - Frontend work → also invoke gstack `/design-review` (visual/theme consistency vs the app's design system).
+   - Visual UI changes → also invoke gstack `/design-review` (visual/theme consistency vs the app's design system).
    - Resolve credentials here (see Credentials).
    *Verify:* health score recorded; every finding fixed, escalated (below), or explicitly deferred
    with reason.
@@ -237,7 +251,8 @@ Triage **every** QA finding into one class and take its route:
   `{"stage": "2. Plan (re-entry: QA escalation)", ...}`) to `.claude/finalize-stages.jsonl`, and the
   finalize report records: finding → route taken → what changed.
 
-**REQUIRED SUB-SKILLS:** `provenship:brainstorming`, `provenship:writing-plans`,
+**SKILL REFERENCES — invoke only when the owning phase or condition above applies; this is not a
+preload list:** `provenship:brainstorming`, `provenship:writing-plans`,
 `provenship:test-driven-development`, `provenship:subagent-driven-development`,
 `provenship:requesting-code-review`, `provenship:receiving-code-review`,
 `provenship:executing-plans`, `provenship:systematic-debugging`,

@@ -6,6 +6,15 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-14
+
+### Changed
+- **Load skills only when needed.** Preflight checks names or file existence without reading skill
+  bodies. Each phase or task loads only its applicable skills and reuses instructions already in
+  context. Frontend routing selects at most one visual-direction skill without preloading
+  alternatives; backend, tooling, copy-only, and frontend logic-only tasks skip design skills.
+  Design review runs for visual UI changes. Required phase checks remain in place.
+
 ## [0.2.1] - 2026-11-14
 
 ### Added
@@ -102,7 +111,8 @@ All notable changes to Provenship are documented here. The format is based on
 - gstack declared as a runtime dependency with `scripts/install-gstack.sh`.
 - `cost-table.py` per-stage token/cost attribution, vendoring sync + lint scripts, CI, and docs.
 
-[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/RudreshNarwal/provenship/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/RudreshNarwal/provenship/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RudreshNarwal/provenship/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/RudreshNarwal/provenship/releases/tag/v0.1.0

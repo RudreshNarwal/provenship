@@ -134,6 +134,9 @@ installed via `scripts/install-gstack.sh`. Used in Phases 5–6 (`/qa`, `/qa-onl
   stop with install instructions if gstack is missing. `landing-page-design`, `hallmark`, and
   `dashboard-design` are optional, un-vendored UI deps. New landing / marketing / brand pages prefer
   `landing-page-design`, then `hallmark`, then bundled `frontend-design`.
+- **Skill loading** — check names/paths without reading bodies; load only at the owning phase or
+  task and reuse instructions in context. Visual-direction skills apply only to visual design work;
+  select at most one and have the implementer load it, without preloading alternatives.
 - **Discipline** — invoke `provenship:karpathy-guidelines` at start; rules apply to every phase.
 - **Autonomy gate** (asked once, after Phase 1) — "run autonomously?" + QA credentials. Yes → zero
   further questions, recommended defaults table, safer-interpretation-logged on ambiguity.
