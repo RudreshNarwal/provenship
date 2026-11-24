@@ -131,9 +131,8 @@ installed via `scripts/install-gstack.sh`. Used in Phases 5–6 (`/qa`, `/qa-onl
 - **Scope gate** — Small vs Big before Phase 1. Brainstorm + `/autoplan` are Big-only; Small gets a short
   plan + self-review. `/office-hours` is not in the default flow.
 - **Phase 0 — Preflight** — verify gstack installed (superpowers/karpathy/frontend-design are bundled);
-  stop with install instructions if gstack is missing. `landing-page-design`, `hallmark`, and
-  `dashboard-design` are optional, un-vendored UI deps. New landing / marketing / brand pages prefer
-  `landing-page-design`, then `hallmark`, then bundled `frontend-design`.
+  stop with install instructions if gstack is missing. Visual UI work follows the project design system and uses
+  `untaste` when available, then bundled `frontend-design` as the fallback.
 - **Skill loading** — check names/paths without reading bodies; load only at the owning phase or
   task and reuse instructions in context. Visual-direction skills apply only to visual design work;
   select at most one and have the implementer load it, without preloading alternatives.

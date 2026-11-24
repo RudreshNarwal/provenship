@@ -82,16 +82,8 @@ router; stop checking alternatives once a matching installed skill is found.
   `scripts/install-gstack.sh` (it bootstraps Bun + gstack + Playwright) and STOP until it's installed.
 - **frontend-design** — **bundled** fallback for visual design work (vendored under
   `provenship:frontend-design`); load only when selected by the Phase 3 router.
-- **landing-page-design** — *optional*, preferred for **new landing / marketing / brand pages**.
-  Detect an installed skill (including `~/.claude/skills/landing-page-design`,
-  `~/.agents/skills/landing-page-design`, or project-local equivalents). Install:
-  `npx skills add elayadesign/ai-design-skills --skill landing-page-design`.
-  Missing → try `hallmark`, then bundled `provenship:frontend-design`, silently.
-- **hallmark**, **dashboard-design** — *optional*, for **new** UI (not bundled). Detect an installed
-  skill in the agent's user or project skill directories. Missing → fall back to
-  `provenship:frontend-design` silently. Install:
-  `npx skills add nutlope/hallmark`; `/plugin marketplace add abdiraimov-otabek/dashboard-design-skill`
-  then `/plugin install dashboard-design@dashboard-design-skill`.
+- **untaste** — optional first choice for visual UI design. Check the available skill names or
+  project and user skill directories. If unavailable, use bundled `provenship:frontend-design`.
 
 If the dependency is genuinely unavailable and cannot be installed (e.g. no network in a sandbox),
 say so plainly and stop — do not silently skip QA or ship.
@@ -170,30 +162,11 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      minimal one for the new code (e.g. pytest for Django, vitest for Vue; smoke-level is enough).
      Only if setup would dwarf the feature itself, record an explicit no-harness exception that
      Finalize must surface.
-   - Tasks that create or change **visual design** — **route by what is being built**, and
-     **name the selected skill in the implementer prompt** (subagents don't inherit it). Backend,
-     tooling, copy-only, and frontend logic-only changes do not need a visual-direction skill.
-     Select from metadata and availability; the implementer loads the chosen skill when starting
-     that task. The orchestrator need not read it just to dispatch. First match wins:
-
-     | Building | Use (if installed) |
-     |---|---|
-     | Change to an **existing** UI | the app's own design system / project frontend skill. No new aesthetic; Hallmark only if the user names it |
-     | **New** landing / marketing / brand page or site | `landing-page-design`; if missing, `hallmark` (build mode; run `scripts/sloplint.mjs --render` before handing back), then bundled `provenship:frontend-design` |
-     | **New** data dashboard (KPIs, charts, filters) | `dashboard-design` (it ends with a screenshot QA pass) |
-     | **New** other app screen (admin CRUD, tables, forms, settings) | `hallmark` with `--scope app` |
-     | Chart only, no screen | `dataviz` |
-     | Nothing above installed, or no design system | `provenship:frontend-design` (bold aesthetic — fine for new pages, avoid for dense tools) |
-
-     At most one visual-direction skill per task; never stack two on the same screen. A fallback is
-     used only if the preferred skill is unavailable, not as an additional design pass.
-
-     **Dashboard reference — BoardUI** (boardui.com; React + Tailwind v4 + React Aria, tokens designed in
-     Figma). On a **non-React** stack (Vue/Nuxt/Svelte/plain) it is a *visual reference only*: borrow the
-     stat-card / data-grid / chart-card patterns, semantic color tokens, density and loading/empty/error
-     states — do not install it. On React + Tailwind v4 it may be installed (`npx boardui@latest init`,
-     `npx boardui@latest skill`). Free tier is MIT; its charts and dashboard templates are paid Pro — take
-     the pattern, never copy Pro source.
+   - For tasks that create or change **visual UI design**, select `untaste` if available,
+     otherwise select bundled `provenship:frontend-design`. Name the selected skill in the
+     implementer prompt and load only that skill when the task starts. Follow the project's
+     established design system. Skip design skills for backend, tooling, copy-only, and
+     frontend logic-only changes.
    - **Every subagent prompt MUST embed the karpathy discipline** — fresh subagents don't inherit
      this context. Tell each implementer: state your assumptions in your report; if the task is
      ambiguous, return the question instead of guessing; minimum code; touch only what the task
@@ -259,7 +232,7 @@ preload list:** `provenship:brainstorming`, `provenship:writing-plans`,
 `provenship:verification-before-completion`, `provenship:finishing-a-development-branch`,
 `provenship:karpathy-guidelines`, `provenship:frontend-design`, and gstack `/qa`, `/qa-only`,
 `/browse`, `/design-review`, `/autoplan`, `/ship`, `/land-and-deploy`, `/setup-browser-cookies`
-(optional: `landing-page-design`, `hallmark`, `dashboard-design`, `dataviz` for UI;
+(optional: `untaste` for UI;
 `/office-hours` only on request). `brainstorming` and
 `/autoplan` are Big-only (see Scope gate).
 

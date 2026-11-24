@@ -6,6 +6,12 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-24
+
+### Changed
+- Removed Hallmark from frontend design routing. Visual UI tasks now use Untaste when available
+  and bundled `frontend-design` otherwise, following the project's established design system.
+
 ## [0.2.2] - 2026-11-14
 
 ### Changed
@@ -111,7 +117,8 @@ All notable changes to Provenship are documented here. The format is based on
 - gstack declared as a runtime dependency with `scripts/install-gstack.sh`.
 - `cost-table.py` per-stage token/cost attribution, vendoring sync + lint scripts, CI, and docs.
 
-[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/RudreshNarwal/provenship/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/RudreshNarwal/provenship/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/RudreshNarwal/provenship/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/RudreshNarwal/provenship/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/RudreshNarwal/provenship/compare/v0.1.0...v0.2.0

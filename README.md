@@ -8,7 +8,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-22C55E.svg"></a>
   <a href="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml"><img alt="CI" src="https://github.com/RudreshNarwal/provenship/actions/workflows/lint.yml/badge.svg"></a>
-  <img alt="Version 0.2.2" src="https://img.shields.io/badge/version-0.2.2-0EA5A0.svg">
+  <img alt="Version 0.2.3" src="https://img.shields.io/badge/version-0.2.3-0EA5A0.svg">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-0F172A.svg">
 </p>
 
@@ -45,10 +45,7 @@ Provenship doesn't just write code — it runs a strict engineering lifecycle, e
 - **`2` 📋 Plan** — a step-by-step implementation plan *before* touching files. Small work gets a short
   plan + one self-review; Big work gets `writing-plans` + a single `/autoplan` pass.
 - **`3` 🧪 Build (TDD)** — writes failing tests *first*, then the minimal clean code to pass them,
-  with Karpathy discipline injected into every subagent prompt; UI work uses `frontend-design`
-  (optionally [landing-page-design](https://github.com/elayadesign/ai-design-skills) for new landing pages,
-  [Hallmark](https://github.com/Nutlope/hallmark) for new app screens, and
-  [dashboard-design](https://github.com/abdiraimov-otabek/dashboard-design-skill) for new data dashboards).
+  with Karpathy discipline injected into every subagent prompt. Visual UI work uses Untaste when available or bundled `frontend-design`.
 - **`4` 🔍 Review** — self-reviews the diff for correctness, security, and style (+ `/review`,
   `/codex` for an adversarial second opinion).
 - **`5` 🌐 Browser + API QA** — drives a headless browser to verify the UI *and* asserts the real
@@ -254,21 +251,11 @@ plus one Apache-2.0 skill — `frontend-design`), so it installs as one self-con
 the exception — it's a separate product you install once. Full provenance and versions are in
 [`VENDORED.md`](./VENDORED.md).
 
-### Optional frontend skills
+### Frontend design
 
-For new landing, marketing, and brand pages, Provenship prefers
-[`landing-page-design`](https://github.com/elayadesign/ai-design-skills). Install it separately:
-
-```bash
-npx skills add elayadesign/ai-design-skills --skill landing-page-design
-```
-
-Add `-g` for a user-level install across projects. If the skill is unavailable, Provenship uses
-Hallmark when installed, then bundled `frontend-design`. Tasks that need visual design load at most
-one design skill; backend, tooling, copy-only, and frontend logic-only changes skip design skills.
-Changes to existing UI continue to use the project's design system. Skills load when their phase
-or task needs them, without preloading alternatives, and loaded instructions are reused within the
-current context.
+For visual UI work, Provenship follows the project's established design system. It loads
+`untaste` when available and uses bundled `frontend-design` otherwise. Backend, tooling,
+copy-only, and frontend logic-only tasks skip design skills.
 
 ## ❓ FAQ
 
