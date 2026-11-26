@@ -52,7 +52,9 @@ skills/
   provenship/          # THE MAIN WORKFLOW — this is the project's own code
     SKILL.md           # the 6-phase pipeline + Phase-0 preflight + autonomy gate
     cost-table.py      # per-stage token/cost attribution from session transcripts
-  <11 vendored skills> # pinned upstream copies — DO NOT hand-edit (see below)
+  website-taste/       # first-party: marketing-site / landing-page process + claims-check.sh
+  update/              # first-party: /provenship:update
+  <13 vendored skills> # pinned upstream copies — DO NOT hand-edit (see below)
 scripts/
   install-gstack.sh    # installs the one un-vendorable dependency (idempotent)
   sync-vendored.sh     # re-pulls upstream skills + re-applies the namespace rewrite
@@ -71,7 +73,7 @@ README.md  CONTRIBUTING.md  LICENSE  .gitignore
 
 ## The vendoring model (most important thing to understand)
 
-Everything under `skills/` **except `skills/provenship/`** is a pinned, verbatim copy of an upstream
+Everything under `skills/` **except the first-party `provenship/`, `website-taste/` and `update/`** is a pinned, verbatim copy of an upstream
 permissively-licensed skill (MIT, or Apache-2.0 for `frontend-design`), with one mechanical
 transformation applied: skill cross-references are re-namespaced from
 the upstream prefix to `provenship:` so they resolve to the bundled copies regardless of what else the
@@ -120,7 +122,8 @@ installed via `scripts/install-gstack.sh`. Used in Phases 5–6 (`/qa`, `/qa-onl
   2. every `provenship:<x>` reference resolves to a bundled dir
   3. `cost-table.py` compiles
   4. JSON manifests are valid
-  5. no personal references ("rudy") in the main skill
+  5. no personal or product-specific references in the first-party skills
+  6. `claims-check.sh` parses
 - Git: commit messages end with the project's Co-Authored-By trailer. Don't push or create the GitHub
   repo unless asked — the remote does not exist yet and the name hasn't been claimed.
 
