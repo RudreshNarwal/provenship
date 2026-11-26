@@ -6,6 +6,24 @@ All notable changes to Provenship are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-27
+
+### Added
+- **`website-taste` skill** (`provenship:website-taste`, first-party). Invoked when Provenship builds
+  or redesigns a product's marketing site, landing page or homepage. It runs a product brief and a
+  reference teardown before design, keeps taste tied to the brand, draws the product in code on
+  sample data, and closes each wave with a screenshot loop. Every product noun is derived from the
+  brief, so it adapts to any product. Includes a dashboards override and an optional intro-video
+  and audio section.
+- **`claims-check.sh`** honesty gate next to the skill: fails on certification and ROI claims, em
+  dashes, internal epic numbers, slop words and stray raster files; per-project rules in
+  `.claims-check`.
+- A performance, accessibility and SEO budget for site work (LCP, CLS, INP, contrast, focus, meta/OG).
+
+### Changed
+- The main skill routes site work to `website-taste` in Phases 1/2, 3 and 5.
+- Lint covers the new skill (no personal or product-specific references; `claims-check.sh` parses).
+
 ## [0.2.3] - 2026-11-24
 
 ### Changed

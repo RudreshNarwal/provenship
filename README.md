@@ -73,7 +73,7 @@ requirement
 [2] Plan ───────── Small: short plan · Big: writing-plans + /autoplan ◀─┤
     │                                                                  │ re-plan / re-design
     ▼                                                                  │
-[3] Build ──────── provenship:subagent-driven-development · TDD · provenship:frontend-design for UI
+[3] Build ──────── provenship:subagent-driven-development · TDD · provenship:frontend-design for UI · website-taste for sites
     │              karpathy discipline embedded in every subagent prompt
     ▼                                                                  │
 [4] Review ─────── provenship:requesting-code-review + receiving-code-review (+ /review, /codex)
@@ -256,6 +256,15 @@ the exception — it's a separate product you install once. Full provenance and 
 For visual UI work, Provenship follows the project's established design system. It loads
 `untaste` when available and uses bundled `frontend-design` otherwise. Backend, tooling,
 copy-only, and frontend logic-only tasks skip design skills.
+
+### Website taste
+
+When the work is a product's marketing site or landing page, Provenship also loads its own
+`website-taste` skill: a product brief and a reference teardown before any design, taste taken from
+the brand rather than a template, the product drawn in code on sample data (no screenshots), honest
+per-capability status, and a 1440/390 screenshot loop each wave. It ships `claims-check.sh`, an
+honesty gate for site copy (certification and ROI claims, em dashes, internal epic numbers, slop
+words), configurable per project with a `.claims-check` file.
 
 ## ❓ FAQ
 

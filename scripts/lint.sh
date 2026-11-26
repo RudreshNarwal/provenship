@@ -35,14 +35,21 @@ else
   echo "FAIL:"; cat /tmp/sw_json; fail=1
 fi
 
-echo "==> 5. Main skill has no personal references"
-if grep -rin "rudy" "$ROOT/skills/provenship" >/tmp/sw_rudy 2>/dev/null; then
+echo "==> 5. First-party skills have no personal or product-specific references"
+if grep -rEin "rudy|iprocure" "$ROOT/skills/provenship" "$ROOT/skills/website-taste" >/tmp/sw_rudy 2>/dev/null; then
   echo "FAIL: personal references remain:"; cat /tmp/sw_rudy; fail=1
 else
   echo "OK"
 fi
 
-echo "==> 6. OpenCode plugin parses (skipped if node absent)"
+echo "==> 6. claims-check.sh parses"
+if bash -n "$ROOT/skills/website-taste/claims-check.sh" 2>/tmp/sw_sh; then
+  echo "OK"
+else
+  echo "FAIL:"; cat /tmp/sw_sh; fail=1
+fi
+
+echo "==> 7. OpenCode plugin parses (skipped if node absent)"
 if command -v node >/dev/null 2>&1; then
   if node --check "$ROOT/.opencode/plugins/provenship.mjs" 2>/tmp/sw_mjs; then
     echo "OK"

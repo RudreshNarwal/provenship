@@ -84,6 +84,8 @@ router; stop checking alternatives once a matching installed skill is found.
   `provenship:frontend-design`); load only when selected by the Phase 3 router.
 - **untaste** — optional first choice for visual UI design. Check the available skill names or
   project and user skill directories. If unavailable, use bundled `provenship:frontend-design`.
+- **website-taste** — **bundled** process skill (`provenship:website-taste`) for product marketing
+  sites and landing pages; load only when the Site work rule below applies.
 
 If the dependency is genuinely unavailable and cannot be installed (e.g. no network in a sandbox),
 say so plainly and stop — do not silently skip QA or ship.
@@ -138,6 +140,21 @@ When the spec is approved (or the Small goal is stated), ask one batched questio
 Autonomous mode removes *questions to the user*, not harness permissions — pair it with a scoped
 `.claude/settings.json` allowlist (see Running automatically) or tool prompts will still interrupt.
 
+## Site work (marketing site, landing page, product homepage)
+
+When the work creates or redesigns a product's marketing site, landing page, homepage or a marketing
+section, invoke `provenship:website-taste` and keep it for the whole run. It adds to the phases, it
+does not replace them:
+
+- **Phase 1/2:** its product brief and reference teardown come first; the gap report's chosen waves
+  become the plan. Brand changes (ground, accent, fonts, voice) need user sign-off, also in
+  autonomous mode.
+- **Phase 3:** its build rules apply alongside the one selected visual skill (untaste or
+  `provenship:frontend-design`).
+- **Phase 5:** run its quality loop (1440 and 390 screenshots), `claims-check.sh` and the
+  performance/accessibility budget on top of `/qa` and `/design-review`. A claims-check failure is a
+  local bug.
+
 ## Phases (run in order)
 
 **Before each phase's work, record a stage marker** (see Cost tracking).
@@ -166,7 +183,8 @@ Autonomous mode removes *questions to the user*, not harness permissions — pai
      otherwise select bundled `provenship:frontend-design`. Name the selected skill in the
      implementer prompt and load only that skill when the task starts. Follow the project's
      established design system. Skip design skills for backend, tooling, copy-only, and
-     frontend logic-only changes.
+     frontend logic-only changes. Marketing site or landing page → also follow
+     `provenship:website-taste` (see Site work).
    - **Every subagent prompt MUST embed the karpathy discipline** — fresh subagents don't inherit
      this context. Tell each implementer: state your assumptions in your report; if the task is
      ambiguous, return the question instead of guessing; minimum code; touch only what the task
@@ -230,7 +248,8 @@ preload list:** `provenship:brainstorming`, `provenship:writing-plans`,
 `provenship:requesting-code-review`, `provenship:receiving-code-review`,
 `provenship:executing-plans`, `provenship:systematic-debugging`,
 `provenship:verification-before-completion`, `provenship:finishing-a-development-branch`,
-`provenship:karpathy-guidelines`, `provenship:frontend-design`, and gstack `/qa`, `/qa-only`,
+`provenship:karpathy-guidelines`, `provenship:frontend-design`, `provenship:website-taste` (site
+work only), and gstack `/qa`, `/qa-only`,
 `/browse`, `/design-review`, `/autoplan`, `/ship`, `/land-and-deploy`, `/setup-browser-cookies`
 (optional: `untaste` for UI;
 `/office-hours` only on request). `brainstorming` and
